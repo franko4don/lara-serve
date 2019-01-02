@@ -11,6 +11,8 @@ RUN apk --update --no-cache add ca-certificates \
     bash \
     supervisor \
     nano \
+    py-pip \
+    certbot \
     curl
 
 # trust this project public key to trust the packages.
