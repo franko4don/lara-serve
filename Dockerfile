@@ -16,18 +16,18 @@ RUN apk --update --no-cache add ca-certificates \
     curl
 
 # trust this project public key to trust the packages.
-ADD https://php.codecasts.rocks/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
 # IMAGE ARGUMENTS WITH DEFAULTS.
 ARG PHP_VERSION=7.2
 ARG ALPINE_VERSION=3.8
-ARG COMPOSER_HASH=93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8
+ARG COMPOSER_HASH=a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1
 
 
 # CONFIGURE ALPINE REPOSITORIES AND PHP BUILD DIR.
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
-    echo "@php https://php.codecasts.rocks/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
+    echo "@php https://dl.bintray.com/php-alpine/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
 
 
 # INSTALL PHP AND SOME EXTENSIONS. SEE: https://github.com/codecasts/php-alpine
@@ -68,8 +68,8 @@ ADD fpm/www.conf /etc/php7/php-fpm.d/www.conf
 ADD nginx/nginx.conf /etc/nginx/nginx.conf
 ADD supervisor/supervisord.conf /etc/supervisord.conf
 ADD nginx/default.conf /etc/nginx/sites-available/default.conf
-ADD supervisor/conf.d/nginx-daemon.conf /etc/conf.d/nginx-daemon.conf
 ADD supervisor/conf.d/php-fpm-daemon.conf /etc/conf.d/php-fpm-daemon.conf
+ADD supervisor/conf.d/nginx-daemon.conf /etc/conf.d/nginx-daemon.conf
 ADD run.sh /run.sh
 RUN chmod 755 /run.sh
 
@@ -78,7 +78,6 @@ EXPOSE 80 443
 
 # SET THE WORK DIRECTORY.
 WORKDIR /var/www
-
 
 # KICKSTART!
 CMD ["/run.sh"]
